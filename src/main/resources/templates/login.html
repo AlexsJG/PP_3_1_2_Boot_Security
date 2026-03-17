@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <style>
+        body { font-family: Arial,serif; margin: 40px; }
+        input { margin: 5px 0; padding: 5px; width: 200px; }
+        button { padding: 5px 15px; }
+    </style>
+</head>
+<body>
+<h2>Please sign in</h2>
+<form th:action="@{/login}" method="post">
+    <div>
+        <label>Email:</label><br>
+        <label>
+            <input type="text" name="email" placeholder="Email" required>
+        </label>
+    </div>
+    <div>
+        <label>Password:</label><br>
+        <label>
+            <input type="password" name="password" placeholder="Password" required>
+        </label>
+    </div>
+    <button type="submit">Sign in</button>
+</form>
+</body>
+</html>
