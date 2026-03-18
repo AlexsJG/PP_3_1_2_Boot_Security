@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.RoleServiceImpl;
-import ru.kata.spring.boot_security.demo.services.UserServiceImpl;
+import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserService;
+
 
 import java.util.List;
 
@@ -21,10 +21,10 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserServiceImpl userServiceImpl;
-    private final RoleServiceImpl roleServiceImpl;
+    private final UserService userServiceImpl;
+    private final RoleService roleServiceImpl;
 
-    public AdminController(UserServiceImpl userServiceImpl, RoleServiceImpl roleServiceImpl) {
+    public AdminController(UserService userServiceImpl, RoleService roleServiceImpl) {
         this.userServiceImpl = userServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
     }
@@ -56,20 +56,19 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public String createUser(@ModelAttribute("newUser") User user,
-                             @RequestParam(value = "roles", required = false) Integer[] rolesIds) {
-        userServiceImpl.saveUserWithRoles(user, rolesIds);
+    public String createUser(@ModelAttribute("newUser") User user) {
+        userServiceImpl.saveUserWithRoles(user);
         return "redirect:/admin";
     }
 
     @PostMapping("/users/{id}/update")
     public String updateUser(@PathVariable Integer id,
-                             @ModelAttribute User user,
-                             @RequestParam(value = "roles", required = false) Integer[] rolesIds) {
+                             @ModelAttribute User user) {
 
-        userServiceImpl.updateUserWithRoles(id, user, rolesIds);
+        userServiceImpl.updateUserWithRoles(id, user);
         return "redirect:/admin";
     }
+
 
     @PostMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable Integer id) {

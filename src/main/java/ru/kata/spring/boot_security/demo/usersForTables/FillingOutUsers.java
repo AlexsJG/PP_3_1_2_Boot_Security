@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.RoleServiceImpl;
-import ru.kata.spring.boot_security.demo.services.UserServiceImpl;
+import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,11 +17,11 @@ import java.util.List;
 @Component
 public class FillingOutUsers {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userServiceImpl;
 
-    private final RoleServiceImpl roleServiceImpl;
+    private final RoleService roleServiceImpl;
 
-    public FillingOutUsers(UserServiceImpl userServiceImpl, RoleServiceImpl roleServiceImpl) {
+    public FillingOutUsers(UserService userServiceImpl, RoleService roleServiceImpl) {
         this.userServiceImpl = userServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
     }

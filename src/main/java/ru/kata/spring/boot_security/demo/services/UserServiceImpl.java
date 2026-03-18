@@ -4,7 +4,7 @@ package ru.kata.spring.boot_security.demo.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.Role;
+
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
@@ -15,16 +15,14 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private  final RoleService roleServiceImpl;
     private final PasswordEncoder passwordEncoder;
 
 
-
-    public UserServiceImpl(UserRepository userRepository, RoleService roleServiceImpl, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleServiceImpl = roleServiceImpl;
         this.passwordEncoder = passwordEncoder;
     }
+
     public List<User> allUsers() {
         return userRepository.findAll();
     }
@@ -58,6 +56,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
     @Transactional
     public void dropTable() {
         userRepository.deleteAll();
@@ -71,48 +70,19 @@ public class UserServiceImpl implements UserService {
         return user.getRoles().stream()
                 .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"));
     }
+
     @Override
     @Transactional
-    public void saveUserWithRoles(User user, Integer[] roleIds) {
-        if (user.getRoles() != null) {
-            user.getRoles().clear();
-        }
-        if (roleIds != null) {
-            for (Integer roleId : roleIds) {
-                Role role = roleServiceImpl.findById(roleId);
-                user.addRoleToUser(role);
-                System.out.println("Added role: " + role.getRole());
-            }
-        }
+    public void saveUserWithRoles(User user) {
         this.save(user);
-        System.out.println("User saved successfully with " +
-                (roleIds != null ? roleIds.length : 0) + " roles");
+
     }
 
     @Override
     @Transactional
-    public void updateUserWithRoles(Integer id, User updatedUser, Integer[] roleIds) {
-        System.out.println("Updating user with id: " + id);
-
-        User existingUser = this.findById(id);
-        existingUser.setFirstName(updatedUser.getFirstName());
-        existingUser.setLastName(updatedUser.getLastName());
-        existingUser.setAge(updatedUser.getAge());
-        existingUser.setEmail(updatedUser.getEmail());
-        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-            existingUser.setPassword(updatedUser.getPassword());
-        }
-        existingUser.getRoles().clear();
-        if (roleIds != null) {
-            for (Integer roleId : roleIds) {
-                Role role = roleServiceImpl.findById(roleId);
-                existingUser.addRoleToUser(role);
-                System.out.println("Added role: " + role.getRole());
-            }
-        }
-        this.update(existingUser);
-        System.out.println("User updated successfully with " +
-                (roleIds != null ? roleIds.length : 0) + " roles");
+    public void updateUserWithRoles(Integer id, User updatedUser) {
+        updatedUser.setId(id);
+        this.update(updatedUser);
     }
 }
 
