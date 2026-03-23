@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -57,15 +56,6 @@ public class User implements UserDetails {
         this.age = age;
         this.email = email;
         this.password = password;
-    }
-
-    public void addRoleToUser(Role role) {
-        if (roles == null) {
-            roles = new ArrayList<>();
-        }
-        if (!roles.contains(role)) {
-            roles.add(role);
-        }
     }
 
     public int getId() {

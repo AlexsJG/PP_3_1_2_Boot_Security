@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import ru.kata.spring.boot_security.demo.models.Role;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -38,23 +37,6 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/new")
-    public String newUserForm(@AuthenticationPrincipal User currentUser, Model model) {
-        List<Role> roles = roleServiceImpl.findAll();
-        model.addAttribute("newUser", new User());
-        model.addAttribute("roles", roles);
-        model.addAttribute("currentUser", currentUser);
-        return "adduser";
-    }
-
-    @GetMapping("/users/{id}/edit")
-    public String editUserForm(@AuthenticationPrincipal User currentUser, @PathVariable Integer id, Model model) {
-        model.addAttribute("user", userServiceImpl.findById(id));
-        model.addAttribute("roles", roleServiceImpl.findAll());
-        model.addAttribute("currentUser", currentUser);
-        return "update";
-    }
-
     @PostMapping("/users")
     public String createUser(@ModelAttribute("newUser") User user) {
         userServiceImpl.saveUserWithRoles(user);
@@ -69,6 +51,12 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+
+    @GetMapping("/users/{id}/details")
+    @ResponseBody
+    public User getUserDetails(@PathVariable Integer id) {
+        return userServiceImpl.findById(id);
+    }
 
     @PostMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable Integer id) {

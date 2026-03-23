@@ -17,8 +17,6 @@ public interface UserService {
 
     void dropTable();
 
-    boolean isAdmin(User user);
-
     void saveUserWithRoles(User user);
 
     void updateUserWithRoles(Integer id, User updatedUser);

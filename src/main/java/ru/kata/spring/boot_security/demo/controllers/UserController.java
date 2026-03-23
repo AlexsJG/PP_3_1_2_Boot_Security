@@ -29,8 +29,7 @@ public class UserController {
 
     @GetMapping("/user")
     public String userPage(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
-        model.addAttribute("isAdmin", userService.isAdmin(user));
+        model.addAttribute("currentUser", user);
         return "user";
     }
 }

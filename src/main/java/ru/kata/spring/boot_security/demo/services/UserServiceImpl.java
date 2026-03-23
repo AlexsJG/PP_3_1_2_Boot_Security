@@ -62,14 +62,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteAll();
     }
 
-    @Override
-    public boolean isAdmin(User user) {
-        if (user == null || user.getRoles() == null) {
-            return false;
-        }
-        return user.getRoles().stream()
-                .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"));
-    }
 
     @Override
     @Transactional

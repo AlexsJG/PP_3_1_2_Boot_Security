@@ -21,12 +21,6 @@ public class RoleServiceImpl implements RoleService {
 
     }
     @Override
-    public Role findById(Integer id) {
-        return roleRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
-    }
-
-    @Override
     public List<Role> findAll() {
         return roleRepository.findAll();
     }
