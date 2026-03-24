@@ -20,18 +20,18 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserService userServiceImpl;
-    private final RoleService roleServiceImpl;
+    private final UserService userService;
+    private final RoleService roleService;
 
-    public AdminController(UserService userServiceImpl, RoleService roleServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
-        this.roleServiceImpl = roleServiceImpl;
+    public AdminController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping
     public String adminPage(@AuthenticationPrincipal User currentUser, Model model) {
-        model.addAttribute("users", userServiceImpl.allUsers());
-        model.addAttribute("roles", roleServiceImpl.findAll());
+        model.addAttribute("users", userService.allUsers());
+        model.addAttribute("roles", roleService.findAll());
         model.addAttribute("newUser", new User());
         model.addAttribute("currentUser", currentUser);
         return "admin";
@@ -39,7 +39,7 @@ public class AdminController {
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute("newUser") User user) {
-        userServiceImpl.saveUserWithRoles(user);
+        userService.saveUserWithRoles(user);
         return "redirect:/admin";
     }
 
@@ -47,7 +47,7 @@ public class AdminController {
     public String updateUser(@PathVariable Integer id,
                              @ModelAttribute User user) {
 
-        userServiceImpl.updateUserWithRoles(id, user);
+        userService.updateUserWithRoles(id, user);
         return "redirect:/admin";
     }
 
@@ -55,12 +55,12 @@ public class AdminController {
     @GetMapping("/users/{id}/details")
     @ResponseBody
     public User getUserDetails(@PathVariable Integer id) {
-        return userServiceImpl.findById(id);
+        return userService.findById(id);
     }
 
     @PostMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable Integer id) {
-        userServiceImpl.deleteById(id);
+        userService.deleteById(id);
         return "redirect:/admin";
     }
 }

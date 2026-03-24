@@ -17,13 +17,13 @@ import java.util.List;
 @Component
 public class FillingOutUsers {
 
-    private final UserService userServiceImpl;
+    private final UserService userService;
 
-    private final RoleService roleServiceImpl;
+    private final RoleService roleService;
 
-    public FillingOutUsers(UserService userServiceImpl, RoleService roleServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
-        this.roleServiceImpl = roleServiceImpl;
+    public FillingOutUsers(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
 
@@ -33,17 +33,17 @@ public class FillingOutUsers {
         User admin = new User("admin", "admin", 30, "admin@mail.ru", "admin");
         Role role1 = new Role("ROLE_ADMIN");
         Role role2 = new Role("ROLE_USER");
-        roleServiceImpl.save(role1);
-        roleServiceImpl.save(role2);
+        roleService.save(role1);
+        roleService.save(role2);
         admin.setRoles(new ArrayList<>(Arrays.asList(role1, role2)));
         user.setRoles(new ArrayList<>(List.of(role2)));
-        userServiceImpl.save(admin);
-        userServiceImpl.save(user);
+        userService.save(admin);
+        userService.save(user);
     }
 
     @PreDestroy
     public void dropTable() {
-        userServiceImpl.dropTable();
-        roleServiceImpl.dropTable();
+        userService.dropTable();
+        roleService.dropTable();
     }
 }

@@ -9,6 +9,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final Pattern BCRYPT_PATTERN =
+            Pattern.compile("\\$2[aby]\\$\\d{2}\\$[./A-Za-z0-9]{53}");
 
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -44,9 +48,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void update(User user) {
         if (user.getPassword() != null && !user.getPassword().isEmpty()
-                && !user.getPassword().startsWith("$2a$")) {
+                && !BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+
         userRepository.save(user);
     }
 
@@ -73,6 +78,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserWithRoles(Integer id, User updatedUser) {
+        if ((updatedUser.getPassword().isEmpty()) | (updatedUser.getPassword() == null)) {
+            updatedUser.setPassword(findById(id).getPassword());
+        }
         updatedUser.setId(id);
         this.update(updatedUser);
     }
